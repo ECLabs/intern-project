@@ -1,0 +1,68 @@
+{
+    "identityPoolName": "internprojectdb3ae7e4_identitypool_db3ae7e4",
+    "allowUnauthenticatedIdentities": false,
+    "lambdaLogPolicy": "intern_db3ae7e4_lambda_log_policy",
+    "openIdLambdaRoleName": "intern_db3ae7e4_openid_lambda_role",
+    "openIdRolePolicy": "intern_db3ae7e4_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "intern_db3ae7e4_openid_lambda_iam_policy",
+    "openIdLogPolicy": "intern_db3ae7e4_openid_lambda_log_policy",
+    "userPoolName": "internprojectdb3ae7e4_userpool_db3ae7e4",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "roleName": "interndb3ae7e4_sns-role",
+    "roleExternalId": "interndb3ae7e4_role_external_id",
+    "policyName": "interndb3ae7e4-sns-policy",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email"
+    ],
+    "userpoolClientName": "interndb3ae7e4_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "interndb3ae7e4_totp_lambda_role",
+    "mfaLambdaLogPolicy": "interndb3ae7e4_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "interndb3ae7e4_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "interndb3ae7e4_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "interndb3ae7e4_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "interndb3ae7e4_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "interndb3ae7e4_userpoolclient_lambda_iam_policy",
+    "userpoolClientSetAttributes": false,
+    "resourceName": "internprojectdb3ae7e4",
+    "authSelections": "identityPoolAndUserPool",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "useDefault": "default"
+}
