@@ -4,6 +4,7 @@ import { SignIn, ConfirmSignIn, ForgotPassword, RequireNewPassword, VerifyContac
 import aws_exports from './aws-exports';
 import './App.css';
 import SignOut from './auth/SignOut';
+import Upload from './pages/Upload'
 
 Amplify.configure(aws_exports);
 
@@ -11,8 +12,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <SignOut />
-        
+        <Upload />
       </React.Fragment>
     );
   }
