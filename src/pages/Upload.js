@@ -1,37 +1,33 @@
 import React, { Component } from 'react';
-import { InputGroup, Input, Button } from 'reactstrap';
-
-import { withAuthenticator } from 'aws-amplify-react';
+import { InputGroup, Input, Button, Card, CardHeader, CardFooter, CardBody, CardText, CardDeck, Table } from 'reactstrap';
 import { Storage } from 'aws-amplify';
 
 export default class Upload extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: '',
             file: '',
-            name: ''
+            filename: '',
+            contents: []
         };
     }
 
-    handleChange = e => {
-        const file = e.target.files[0];
+    handleChange = change => {
+        const file = change.target.files[0];
         if (!file) { return }
         this.setState({
-            url: URL.createObjectURL(file),
             file: file,
-            name: file.name
+            filename: file.name
         });
     };
 
     saveFile = () => {
-        Storage.put(this.state.name, this.state.file)
-            .then(() => {
-                console.log("file saved successfully");
+        Storage.put(this.state.file, this.state.filename)
+            .then((result) => {
+                console.log("file saved successfully", result);
                 this.setState({
-                    url: '',
                     file: '',
-                    name: ''
+                    filename: ''
                 });
             })
             .catch(error => {
@@ -39,18 +35,51 @@ export default class Upload extends Component {
             });
     };
 
+    listContents = () => {
+        Storage.list('')
+            .then(result => {
+                console.log("contents listed successfully", result);
+                this.setState({
+                    contents: this.format(result)
+                });
+            })
+            .catch(error => {
+                console.log("contents failed to list", error);
+            });
+    };
+
+    format = (result) => {
+        let contents = [];
+        return contents;
+    };
+
     render() {
         return (
             <div class="jumbotron">
-                <h1 class="display-4">Upload</h1>
+                <h1>Upload</h1>
                 <p class="lead">Upload files to an S3 bucket.</p>
-                { this.state.url && <Button outline color="primary" onClick={this.saveFile}>upload</Button> }
                 <hr class="my-4"/>
-                <InputGroup>
-                    <Input type="file" onChange={this.handleChange} />
-                </InputGroup>
-                <br/>
-                { this.state.url && <img src={this.state.url} /> }
+                <CardDeck>
+                    <Card>
+                        <CardHeader>Upload</CardHeader>
+                        <CardBody>
+                            <Input type="file" onChange={this.handleChange} />
+                            <br/>
+                            <p class="lead">{ this.state.filename }</p>
+                        </CardBody>
+                        <CardFooter>
+                            { this.state.url && <Button color="secondary" onClick={this.saveFile}>upload</Button> }
+                        </CardFooter>
+                    </Card>
+                    <Card>
+                        <CardHeader>View</CardHeader>
+                        <CardBody>
+                            <Button color="secondary" onClick={this.listContents}>list</Button>
+                            <br/>
+                            <br/>
+                        </CardBody>
+                    </Card>
+                </CardDeck>
             </div>
         );
     }
