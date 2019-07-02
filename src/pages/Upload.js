@@ -12,7 +12,7 @@ export default class Upload extends Component {
         };
     }
 
-    handleChange = change => {
+    selectFile = change => {
         const file = change.target.files[0];
         if (!file) { return }
         this.setState({
@@ -40,7 +40,7 @@ export default class Upload extends Component {
             .then(result => {
                 console.log("contents listed successfully", result);
                 this.setState({
-                    contents: this.format(result)
+                    contents: this.setContents(result)
                 });
             })
             .catch(error => {
@@ -48,8 +48,16 @@ export default class Upload extends Component {
             });
     };
 
-    format = (result) => {
+    setContents = (result) => {
         let contents = [];
+        let names = Object.keys(result).map((i) => { return result[i].key; });
+        let dates = Object.keys(result).map((i) => { return result[i].lastModified; });
+        for (let i = 0; i < result.length; i++) {
+            let file = {};
+            file.name = names[i];
+            file.date = dates[i].toString().match(/.+?(?= GMT)/g)[0];
+            contents.push(file);
+        }
         return contents;
     };
 
@@ -63,21 +71,42 @@ export default class Upload extends Component {
                     <Card>
                         <CardHeader>Upload</CardHeader>
                         <CardBody>
-                            <Input type="file" onChange={this.handleChange} />
+                            <Input type="file" onChange={this.selectFile} />
                             <br/>
                             <p class="lead">{ this.state.filename }</p>
                         </CardBody>
                         <CardFooter>
-                            { this.state.url && <Button color="secondary" onClick={this.saveFile}>upload</Button> }
+                            { this.state.file && <Button outline color="secondary" onClick={this.saveFile}>upload</Button> }
                         </CardFooter>
                     </Card>
                     <Card>
                         <CardHeader>View</CardHeader>
                         <CardBody>
-                            <Button color="secondary" onClick={this.listContents}>list</Button>
-                            <br/>
-                            <br/>
+                            <Button outline color="secondary" onClick={this.listContents}>view</Button>
                         </CardBody>
+                        { this.state.contents.length > 0 &&
+                            <Table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.contents.map((file, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td>{file.name}</td>
+                                                    <td>{file.date}</td>
+                                                </tr>
+                                            );
+                                        })
+                                    }
+                                </tbody>
+                            </Table>
+                        }
+                        <CardFooter></CardFooter>
                     </Card>
                 </CardDeck>
             </div>
