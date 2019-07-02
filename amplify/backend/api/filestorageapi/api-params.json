@@ -1,0 +1,41 @@
+{
+    "paths": [
+        {
+            "name": "/files",
+            "lambdaFunction": "filestoragefunction",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
+        }
+    ],
+    "resourceName": "filestorageapi",
+    "apiName": "filestorageapi",
+    "functionArns": [
+        {
+            "lambdaFunction": "filestoragefunction"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "internproject-internproj-20190627093406-authRole",
+        "unAuthRoleName": "internproject-internproj-20190627093406-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "filestoragefunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

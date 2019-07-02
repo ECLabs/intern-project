@@ -10,5 +10,44 @@
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}
+	},
+	"function": {
+		"filestoragefunction": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "internprojectdb3ae7e4",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "storage",
+					"resourceName": "internprojstorage",
+					"attributes": [
+						"BucketName"
+					]
+				}
+			]
+		}
+	},
+	"api": {
+		"filestorageapi": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "filestoragefunction",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			]
+		}
 	}
 }

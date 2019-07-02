@@ -1,0 +1,20 @@
+{
+    "permissions": {
+        "auth": {
+            "internprojectdb3ae7e4": [
+                "create",
+                "read",
+                "update",
+                "delete"
+            ]
+        },
+        "storage": {
+            "internprojstorage": [
+                "create",
+                "read",
+                "update",
+                "delete"
+            ]
+        }
+    }
+}

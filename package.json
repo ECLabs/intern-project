@@ -6,6 +6,7 @@
     "aws-amplify": "^1.1.29",
     "aws-amplify-react": "^2.3.9",
     "aws-sdk": "^2.481.0",
+    "aws-serverless-express": "^3.3.6",
     "bootstrap": "^4.3.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
