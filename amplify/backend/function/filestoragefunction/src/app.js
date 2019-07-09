@@ -19,10 +19,10 @@ Amplify Params - DO NOT EDIT */
 var express = require('express')
 var bodyParser = require('body-parser')
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-var fs = require('fs')
 
 // declare a new express app
 var app = express()
+app.use(bodyParser({limit: '5mb'}));
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
@@ -43,10 +43,7 @@ const s3 = new AWS.S3();
 
 app.get('/files', function(req, res) {
     const params = { Bucket : process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
-    s3.listObjects(params, (err, data) => {
-        if (err) { console.log(err); }
-        else { res.json({body: data}); }
-    });
+    s3.listObjects(params, (err, data) => { if (err) { throw err } else { res.json({ body: data }); } });
 });
 
 app.get('/files/*', function(req, res) {
@@ -74,16 +71,13 @@ app.post('/files/*', function(req, res) {
 
 app.put('/files', function(req, res) {
     const base64 = req.body.file;
-    const data = Buffer.from(base64, 'base64');
+    const buffer = Buffer.from(base64, 'base64');
     const params = {
         Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME,
         Key: req.body.filename,
-        Body: data
+        Body: buffer
     };
-    s3.upload(params, (err, data) => {
-        if (err) { console.log(err); }
-        else { res.json({ success: 'put call succeeded!', url: req.url, body: req.body }) }
-    });
+    s3.upload(params, (err, data) => { if (err) { throw err } else { res.json({ body: data }); } }); });
 });
 
 app.put('/files/*', function(req, res) {
