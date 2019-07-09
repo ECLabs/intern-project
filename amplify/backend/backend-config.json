@@ -19,7 +19,7 @@
 			"dependsOn": [
 				{
 					"category": "auth",
-					"resourceName": "internprojectdb3ae7e4",
+					"resourceName": "internproject59393a28",
 					"attributes": [
 						"UserPoolId"
 					]

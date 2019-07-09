@@ -19,6 +19,7 @@ Amplify Params - DO NOT EDIT */
 var express = require('express')
 var bodyParser = require('body-parser')
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+var fs = require('fs')
 
 // declare a new express app
 var app = express()
@@ -35,13 +36,13 @@ app.use(function(req, res, next) {
 const AWS = require('aws-sdk');
 AWS.config.update({region: process.env.REGION});
 const s3 = new AWS.S3();
-const params = { Bucket : process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
 
 /**********************
  * Example get method *
  **********************/
 
 app.get('/files', function(req, res) {
+    const params = { Bucket : process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
     s3.listObjects(params, (err, data) => {
         if (err) { console.log(err); }
         else { res.json({body: data}); }
@@ -72,8 +73,17 @@ app.post('/files/*', function(req, res) {
 ****************************/
 
 app.put('/files', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
+    const base64 = req.body.file;
+    const data = Buffer.from(base64, 'base64');
+    const params = {
+        Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME,
+        Key: req.body.filename,
+        Body: data
+    };
+    s3.upload(params, (err, data) => {
+        if (err) { console.log(err); }
+        else { res.json({ success: 'put call succeeded!', url: req.url, body: req.body }) }
+    });
 });
 
 app.put('/files/*', function(req, res) {

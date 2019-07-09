@@ -15,23 +15,35 @@ export default class Upload extends Component {
     selectFile = change => {
         const file = change.target.files[0];
         if (!file) { return }
-        this.setState({
-            file: file,
-            filename: file.name
-        });
+        this.getBase64(file);
+        this.setState({ filename: file.name });
     };
 
+    getBase64 = (file) => {
+        const fr = new FileReader();
+        fr.readAsDataURL(file);
+        fr.onload = () => { this.state.file = fr.result };
+    };
+
+    //fixme: only works for small files
     saveFile = () => {
-        Storage.put(this.state.filename, this.state.file)
-            .then((result) => {
-                console.log("file saved successfully", result);
-                this.setState({
-                    file: '',
-                    filename: ''
-                });
+        const splitBase64 = this.state.file.split(',');
+        const header = splitBase64[0];
+        splitBase64.shift();
+        const base64 = splitBase64.join('');
+        const api = 'filestorageapi';
+        const path = '/files';
+        const params = {
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: { filename: this.state.filename, file: base64 }
+        };
+        API.put(api, path, params)
+            .then(res => {
+                console.log("file uploaded successfully!", res);
+                this.getContent(res);
             })
-            .catch(error => {
-                console.log("file failed to save", error)
+            .catch(err => {
+                console.log("files failed to load.", err);
             });
     };
 
@@ -40,10 +52,10 @@ export default class Upload extends Component {
     getContent = () => {
         const api = 'filestorageapi';
         const path = '/files';
-        const headers = { headers: {"Access-Control-Allow-Origin": "*"} }
-        API.get(api, path, headers)
+        const params = { headers: { "Access-Control-Allow-Origin": "*" } };
+        API.get(api, path, params)
             .then(res => {
-                console.log("files successfully loaded", res);
+                console.log("files loaded successfully", res);
                 this.setContent(res);
             })
             .catch(err => {
@@ -64,9 +76,7 @@ export default class Upload extends Component {
             file.date = file.date.substring(0, file.date.indexOf('T'));
             formattedContent.push(file);
         }
-        this.setState({
-            content: formattedContent
-        });
+        this.setState({ content: formattedContent });
     };
 
     render() {
