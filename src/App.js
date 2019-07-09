@@ -19,7 +19,7 @@ class App extends Component {
         </Fragment>
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route exact path='search' component={Search} />
+          <Route exact path='/search' component={Search} />
         </Switch>
       </Router>
     );
@@ -30,10 +30,4 @@ const MyTheme = {
   button: { backgroundColor: "#007bff"}
 };
 
-export default withAuthenticator(App, false, [
-  <SignIn/>,
-  <ConfirmSignIn/>,
-  <VerifyContact/>,
-  <ForgotPassword/>,
-  <RequireNewPassword/>
-], null, MyTheme);
+export default App;
