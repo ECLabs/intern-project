@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import Amplify from '@aws-amplify/core';
-import { withAuthenticator } from 'aws-amplify-react';
-import awsconfig from './aws-exports';
 import './App.css';
 import SignOut from './auth/SignOut';
-import { Analytics } from 'aws-amplify'
 
-Analytics.configure({ disabled: true })
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from './aws-exports';
+import { withAuthenticator } from 'aws-amplify-react';
+
 Amplify.configure(awsconfig);
 
 class App extends Component {
@@ -24,4 +23,4 @@ const MyTheme = {
     signInButtonIcon: { display: "none" }
 };
 
-export default withAuthenticator(App, false, [], null, MyTheme);
+export default App;
