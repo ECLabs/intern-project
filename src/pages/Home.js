@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { Component } from 'react'
 
 export default class Home extends Component {
@@ -10,5 +9,3 @@ export default class Home extends Component {
         )
     }
 }
-=======
->>>>>>> parent of 05f1e41... Added Home Page
