@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"internprojectdb3ae7e4": {
+		"internproject59393a28": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation"
 		}

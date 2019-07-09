@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
-import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 
 export default class WFSignOut extends Component {
     constructor(props) {
@@ -9,12 +9,12 @@ export default class WFSignOut extends Component {
     }
 
     signOut() {
-        Auth.signOut();
+        Auth.signOut({ global: true });
     }
 
     render() {
         return(
-            <Button light outline sm border="0" onClick={this.signOut}>Sign Out</Button>
+            <Button onClick={this.signOut}>Sign Out</Button>
         );
     }
 }

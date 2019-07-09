@@ -1,0 +1,75 @@
+{
+    "identityPoolName": "internproject59393a28_identitypool_59393a28",
+    "allowUnauthenticatedIdentities": false,
+    "lambdaLogPolicy": "intern_59393a28_lambda_log_policy",
+    "openIdLambdaRoleName": "intern_59393a28_openid_lambda_role",
+    "openIdRolePolicy": "intern_59393a28_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "intern_59393a28_openid_lambda_iam_policy",
+    "openIdLogPolicy": "intern_59393a28_openid_lambda_log_policy",
+    "userPoolName": "internproject59393a28_userpool_59393a28",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "roleName": "intern59393a28_sns-role",
+    "roleExternalId": "intern59393a28_role_external_id",
+    "policyName": "intern59393a28-sns-policy",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email"
+    ],
+    "userpoolClientName": "intern59393a28_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "intern59393a28_totp_lambda_role",
+    "mfaLambdaLogPolicy": "intern59393a28_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "intern59393a28_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "intern59393a28_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "intern59393a28_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "intern59393a28_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "intern59393a28_userpoolclient_lambda_iam_policy",
+    "userpoolClientSetAttributes": false,
+    "resourceName": "internproject59393a28",
+    "authSelections": "identityPoolAndUserPool",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "useDefault": "defaultSocial",
+    "hostedUI": true,
+    "hostedUIDomainName": "internproject59393a28-59393a28",
+    "authProvidersUserPool": [
+        "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}"
+}
