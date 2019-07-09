@@ -25,7 +25,6 @@ export default class Upload extends Component {
         fr.onload = () => { this.state.file = fr.result };
     };
 
-    //fixme: only works for small files
     saveFile = () => {
         const splitBase64 = this.state.file.split(',');
         const header = splitBase64[0];
