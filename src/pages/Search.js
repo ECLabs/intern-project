@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormGroup, Input, Alert  } from 'reactstrap';
 
+
 export default class Search extends Component {
     state = {
         text: '',
