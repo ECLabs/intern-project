@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import Auth from '@aws-amplify/auth';
 
-export default class WFSignOut extends Component {
+export default class SignOut extends Component {
     constructor(props) {
         super(props);
         this.signOut = this.signOut.bind(this);

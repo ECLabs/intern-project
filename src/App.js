@@ -1,26 +1,30 @@
 import React, { Component } from 'react';
 import './App.css';
+import CustomSignIn from './auth/CustomSignIn';
 import SignOut from './auth/SignOut';
 
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify, { Analytics } from 'aws-amplify';
 import awsconfig from './aws-exports';
-import { withAuthenticator } from 'aws-amplify-react';
+import { ConfirmSignIn, ConfirmSignUp, ForgotPassword, RequireNewPassword, VerifyContact, withAuthenticator } from 'aws-amplify-react';
 
 Amplify.configure(awsconfig);
+Analytics.configure({ disabled: true });
 
 class App extends Component {
   render() {
     return (
-      <React.Fragment>
+      <div>
         <SignOut />
-      </React.Fragment>
+      </div>
     );
   }
 }
 
-const MyTheme = {
-    button: { backgroundColor: "#007bff"},
-    signInButtonIcon: { display: "none" }
-};
-
-export default App;
+export default withAuthenticator(App, false, [
+  <CustomSignIn/>,
+  <ConfirmSignIn/>,
+  <VerifyContact/>,
+  <ConfirmSignUp/>,
+  <ForgotPassword/>,
+  <RequireNewPassword/>
+]);

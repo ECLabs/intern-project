@@ -30,7 +30,7 @@
         "categories": {
             "auth": {
                 "internproject59393a28": {
-                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"103516150262-or8uppsfaun94cdc1fc7d5ff5ooj3d4f.apps.googleusercontent.com\",\"client_secret\":\"E7zy0FZGsELL7_askingC7oy \"}]"
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"103516150262-or8uppsfaun94cdc1fc7d5ff5ooj3d4f.apps.googleusercontent.com\",\"client_secret\":\"E7zy0FZGsELL7_askingC7oy\"}]"
                 }
             }
         }
