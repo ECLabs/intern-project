@@ -22,10 +22,7 @@ var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware'
 
 // declare a new express app
 var app = express()
-<<<<<<< HEAD
-=======
 app.use(bodyParser({limit: '5mb'}));
->>>>>>> origin/upload
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
@@ -39,25 +36,14 @@ app.use(function(req, res, next) {
 const AWS = require('aws-sdk');
 AWS.config.update({region: process.env.REGION});
 const s3 = new AWS.S3();
-<<<<<<< HEAD
-const params = { Bucket : process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
-=======
->>>>>>> origin/upload
 
 /**********************
  * Example get method *
  **********************/
 
 app.get('/files', function(req, res) {
-<<<<<<< HEAD
-    s3.listObjects(params, (err, data) => {
-        if (err) { console.log(err); }
-        else { res.json({body: data}); }
-    });
-=======
     const params = { Bucket : process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
     s3.listObjects(params, (err, data) => { if (err) { throw err } else { res.json({ body: data }); } });
->>>>>>> origin/upload
 });
 
 app.get('/files/*', function(req, res) {
@@ -84,10 +70,6 @@ app.post('/files/*', function(req, res) {
 ****************************/
 
 app.put('/files', function(req, res) {
-<<<<<<< HEAD
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-=======
     const base64 = req.body.file;
     const buffer = Buffer.from(base64, 'base64');
     const params = {
@@ -96,7 +78,6 @@ app.put('/files', function(req, res) {
         Body: buffer
     };
     s3.upload(params, (err, data) => { if (err) { throw err } else { res.json({ body: data }); } });
->>>>>>> origin/upload
 });
 
 app.put('/files/*', function(req, res) {
