@@ -77,7 +77,11 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "internproject-internproj-20190627093406-deployment",
+<<<<<<< HEAD
 					"S3Key": "amplify-builds/filestoragefunction-48484a2b6d7a6f304b61-build.zip"
+=======
+					"S3Key": "amplify-builds/filestoragefunction-7941374a5777444b3356-build.zip"
+>>>>>>> origin/upload
 				}
 			}
 		},
