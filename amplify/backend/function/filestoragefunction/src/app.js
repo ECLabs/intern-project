@@ -77,7 +77,7 @@ app.put('/files', function(req, res) {
         Key: req.body.filename,
         Body: buffer
     };
-    s3.upload(params, (err, data) => { if (err) { throw err } else { res.json({ body: data }); } }); });
+    s3.upload(params, (err, data) => { if (err) { throw err } else { res.json({ body: data }); } });
 });
 
 app.put('/files/*', function(req, res) {
