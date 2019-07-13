@@ -14,7 +14,7 @@ export default class SignOut extends Component {
 
     render() {
         return(
-            <Button onClick={this.signOut}>Sign Out</Button>
+            <Button color="danger" onClick={this.signOut}>Sign Out</Button>
         );
     }
 }

@@ -43,11 +43,11 @@ export default class Navigation extends Component {
                             <DropdownItem tag={Link} to='/'>
                                 Home
                             </DropdownItem>
-                            <DropdownItem tag={Link} to='/search'>
-                                Search
-                            </DropdownItem>
                             <DropdownItem tag={Link} to='/upload'>
                                 Upload
+                            </DropdownItem>
+                            <DropdownItem tag={Link} to='/search'>
+                                Search
                             </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>

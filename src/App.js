@@ -3,9 +3,8 @@ import Navigation from './navigation/Navigation';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Search from './pages/Search';
-import CustomSignIn from './auth/CustomSignIn';
-import SignOut from './auth/SignOut';
 import Upload from './pages/Upload';
+import CustomSignIn from './auth/CustomSignIn';
 import './App.css';
 
 import Amplify, { Analytics } from 'aws-amplify';
@@ -24,6 +23,7 @@ class App extends Component {
         </Fragment>
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path='/upload' component={Upload} />
           <Route exact path='/search' component={Search} />
         </Switch>
       </Router>
