@@ -20,7 +20,8 @@ export default class Upload extends Component {
         this.state = {
             file: '', // data of file to be uploaded to S3 bucket
             filename: '', // name of file to be uploaded to S3 bucket
-            files: [] // files in S3 bucket
+            files: [], // files in S3 bucket
+            queue: [] // multiple files to be uploaded to S3 bucket
         };
     }
 
@@ -50,6 +51,11 @@ export default class Upload extends Component {
             .then(res => {
                 console.log("file uploaded successfully!", res);
                 this.getFiles();
+                let queue = this.state.queue;
+                queue.shift();
+                this.setState({ queue: queue });
+                if (queue.length) { this.saveFile(this.state.queue[0].file) }
+                else { console.log("all files uploaded successfully!") }
             })
             .catch(err => {
                 console.log("files failed to load.", err);
@@ -62,7 +68,7 @@ export default class Upload extends Component {
         API.get(api, path, params)
             .then(res => {
                 console.log("files loaded successfully!", res);
-                this.setState({ files: res.body.Contents });
+                this.setState({ files: this.sortFiles(res.body.Contents) });
             })
             .catch(err => {
                 console.log("files failed to load.", err);
@@ -81,6 +87,15 @@ export default class Upload extends Component {
             default :
                 return B.toFixed(2) + " B";
         }
+    };
+
+    // sort files chronologically
+    sortFiles = files => {
+        return files.sort((file1, file2) => {
+            if (file1.LastModified > file2.LastModified) { return -1; }
+            if (file1.LastModified < file2.LastModified) { return 1; }
+            return 0;
+        });
     };
 
     // render table to view files in S3 bucket
@@ -115,7 +130,6 @@ export default class Upload extends Component {
 
     // render dropzone for drag&drop upload
     renderDropzone = () => {
-        const handleSubmit = files => { files.map(file => { this.saveFile(file.file); file.remove(); }); };
         const getInputContent = () => {
             return(
                 <div className="input-content">
@@ -124,13 +138,19 @@ export default class Upload extends Component {
                 </div>
             );
         };
+        const handleSubmit = files => {
+            this.setState({ queue: files });
+            if (!this.state.queue.length) { return; }
+            this.saveFile(this.state.queue[0].file);
+            files.forEach(file => file.remove());
+        };
         return(
             <Dropzone
-                inputContent={ getInputContent() }
+                inputContent={ getInputContent }
                 inputWithFilesContent={ <FontAwesomeIcon icon="cloud-upload-alt" size="lg"/> }
                 submitButtonContent="Upload"
                 onSubmit={ handleSubmit }
-                styles={ { dropzone: { minHeight: 300 } } }
+                styles={ { dropzone: { minHeight: 300, maxHeight: 300 } } }
             />
         );
     };
@@ -141,7 +161,9 @@ export default class Upload extends Component {
             <Card>
                 <CardHeader>Upload</CardHeader>
                 <CardBody>{ this.renderDropzone() }</CardBody>
-                <CardFooter><Button outline color="secondary" onClick={ this.saveFile }>upload</Button></CardFooter>
+                <CardFooter>
+                    <div className="alert alert-secondary">drag & drop file(s) above or click to upload</div>
+                </CardFooter>
             </Card>
         );
     };
@@ -152,7 +174,9 @@ export default class Upload extends Component {
             <Card>
                 <CardHeader>View</CardHeader>
                 <CardBody>{ this.renderTable() }</CardBody>
-                <CardFooter><Button outline color="secondary" onClick={ this.getFiles }>view</Button></CardFooter>
+                <CardFooter>
+                    <div className="alert alert-secondary">{this.state.files.length} file(s)</div>
+                </CardFooter>
             </Card>
         );
     };
@@ -161,7 +185,7 @@ export default class Upload extends Component {
         return(
             <div className="jumbotron">
                 <h1>Upload</h1>
-                <p className="lead">Manage files in an S3 bucket.</p>
+                <p className="lead">manage files in an S3 bucket.</p>
                 <hr className="my-4"/>
                 <CardDeck>
                     { this.renderUploadCard() }
