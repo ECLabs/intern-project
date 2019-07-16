@@ -24,7 +24,7 @@ export default class Home extends Component {
   renderSearchCard = () => {
     return(
       <Card>
-        <CardHeader><h2>Search</h2> <h6>?</h6></CardHeader>
+        <CardHeader><h2>Search Functionality</h2> <h6>Jason Brito & Jeffrey Mercedes</h6></CardHeader>
         <CardBody>Placeholder.</CardBody>
       </Card>
     );
@@ -45,7 +45,7 @@ export default class Home extends Component {
         <h1>Intern Serverless Application Project</h1>
         <p className="lead">We, the interns, have put together a servless
           application by using a number of resources/services offered by AWS. Those
-          resources/services include Cognito, S3, API Gateway, and Elasticsearch.
+          resources/services include AWS Amplify, Cognito, S3, API Gateway, and Elasticsearch.
         </p>
         <hr className="my-4"/>
         <div>
