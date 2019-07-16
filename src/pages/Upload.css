@@ -1,0 +1,8 @@
+.table {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.input-content {
+    text-align: center;
+}

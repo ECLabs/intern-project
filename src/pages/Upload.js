@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import {InputGroup, Input, Button, Card, CardHeader, CardFooter, CardBody, CardText, CardDeck, Table} from 'reactstrap';
-import { Storage, API } from 'aws-amplify'
+import { Storage, API } from 'aws-amplify';
+import './Upload.css';
+import 'react-dropzone-uploader/dist/styles.css';
+import Dropzone from 'react-dropzone-uploader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCloudUploadAlt} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCloudUploadAlt);
 
 // api params
 const api = 'filestorageapi';
@@ -87,28 +95,50 @@ export default class Upload extends Component {
     // render table to view files in S3 bucket
     renderTable = () => {
         return(
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        this.state.files.map((file, index) => {
-                            return (
-                                <tr key={ index }>
-                                    <td>{ file.Key }</td>
-                                    <td>{ file.LastModified.substring(0, file.LastModified.indexOf('T')) }</td>
-                                    <td>{ this.formatSize(file.Size) }</td>
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-            </Table>
+            <div className="table">
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            this.state.files.map((file, index) => {
+                                return(
+                                    <tr key={ index }>
+                                        <td>{ file.Key }</td>
+                                        <td>{ file.LastModified.substring(0, file.LastModified.indexOf('T')) }</td>
+                                        <td>{ this.formatSize(file.Size) }</td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+            </div>
+        );
+    };
+
+    renderDropzone = () => {
+        const handleSubmit = (files, all) => { files.map(file => { console.log(file); file.remove(); }) }
+        const getInputContent = () => {
+            return(
+                <div className="input-content">
+                    <FontAwesomeIcon icon="cloud-upload-alt" size="lg"/>
+                    <p className="lead"><strong>Upload</strong></p>
+                </div>
+            );
+        }
+        return(
+            <Dropzone
+                inputContent = { getInputContent() }
+                inputWithFilesContent =  { <FontAwesomeIcon icon="cloud-upload-alt" size="lg"/> }
+                onSubmit = { handleSubmit }
+                styles = { { dropzone: { minHeight: 300 } } }
+            />
         );
     };
 
@@ -121,8 +151,9 @@ export default class Upload extends Component {
                     <Input type="file" onChange={ this.setFile } />
                     <br/>
                     <p className="lead">{ this.state.filename }</p>
+                    { this.renderDropzone() }
                 </CardBody>
-                <CardFooter><Button outline color="secondary"onClick={ this.saveFile }>upload</Button></CardFooter>
+                <CardFooter><Button outline color="secondary" onClick={ this.saveFile }>upload</Button></CardFooter>
             </Card>
         );
     };
@@ -139,7 +170,7 @@ export default class Upload extends Component {
     };
 
     render() {
-        return (
+        return(
             <div className="jumbotron">
                 <h1>Upload</h1>
                 <p className="lead">Manage files in an S3 bucket.</p>
