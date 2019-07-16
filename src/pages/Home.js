@@ -34,7 +34,10 @@ export default class Home extends Component {
     return(
       <Card>
         <CardHeader><h2>Navbar & Search Page</h2> <h6>Steven Lee</h6></CardHeader>
-        <CardBody>Placeholder.</CardBody>
+        <CardBody>Steven created the navigation bar and the UI for the search page. 
+          The navigation bar allows the user to navigate to any page.
+          This project was his first introduction to React and Reactstrap.
+        </CardBody>
       </Card>
     );
   }
