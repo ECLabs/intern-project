@@ -37,7 +37,7 @@ export default class Search extends Component {
             </Alert> */}
              <form className="col-md-4 mx-auto">
                 <FormGroup>
-                    <Input type="text" className="form-control" id="text" name="text" required
+                    <Input type="text" className="form-control" id="text" name="text" autoComplete="off" required
                         onChange={this.handleChange} />
                 </FormGroup>
                 <Button color="primary" onClick={this.query}>Search</Button>
