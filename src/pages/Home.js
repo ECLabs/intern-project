@@ -33,8 +33,27 @@ export default class Home extends Component {
   renderUploadCard = () => {
     return(
       <Card>
-        <CardHeader><h2>Upload</h2> <h6>Jason Brito</h6></CardHeader>
-        <CardBody>Placeholder.</CardBody>
+        <CardHeader><h2>Upload</h2><h6>Jason Brito</h6></CardHeader>
+        <CardBody>
+        <b>How It Works:</b>
+        <br/>
+        The upload process for this serverless application implements Amazon API Gateway, AWS Lambda, Amazon
+        Elasticsearch Service, and Amazon S3. Amazon API Gateway routes requests to other services in the application;
+        AWS Lambda uploads files to Amazon S3 and metadata to Amazon Elasticsearch Service; finally, Amazon S3 stores
+        files for further processing. Using Amazon API Gateway and AWS Lambda, we separate and secure different
+        services that use our data.
+        <br/><br/>
+        <b>What I Learned:</b>
+        <br/>
+        I learned how to process data from the front end through the back end with various AWS services. The benefit of
+        introducing different services to interact with my data instead of directly accessing it was the layers of
+        protection offered by these services. Specifically, by managing permissions for each of these services, I
+        learned how to compartmentalize access which further secured my data. While the most difficult aspect of this
+        project was debugging cryptic errors from the AWS Console, I have become more comfortable and competent
+        resolving such errors by writing effective tests for Lambda functions and tracing the application execution.
+        I am now much more capable of determining which AWS services would best suit my application and integrating
+        them into my application.
+        </CardBody>
       </Card>
     );
   };
@@ -42,8 +61,11 @@ export default class Home extends Component {
   renderSearchCard = () => {
     return(
       <Card>
-        <CardHeader><h2>Search Functionality</h2> <h6>Jason Brito & Jeffrey Mercedes</h6></CardHeader>
-        <CardBody>Placeholder.</CardBody>
+        <CardHeader><h2>Search Functionality</h2><h6>Jason Brito & Jeffrey Mercedes</h6></CardHeader>
+        <CardBody>
+            Amazon Elasticsearch Service securely ingests data from S3 and searches, analyzes,
+            and visualizes it in real time.
+        </CardBody>
       </Card>
     );
   };
