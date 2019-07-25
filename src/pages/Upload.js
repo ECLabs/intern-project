@@ -20,7 +20,6 @@ export default class Upload extends Component {
         this.state = {
             file: '', // data of file to be uploaded to S3 bucket
             filename: '', // name of file to be uploaded to S3 bucket
-            meta: '', // metadata of the file to be uploaded to S3 bucket
             files: [], // files in S3 bucket
             queue: [] // multiple files to be uploaded to S3 bucket
         };
@@ -30,8 +29,7 @@ export default class Upload extends Component {
     async componentDidMount() { this.getFiles(); };
 
     // read new file as base64 and set state with new file data
-    saveFile = (file, meta) => {
-        this.setState({ meta: meta });
+    saveFile = file => {
         this.setState({ filename: file.name });
         const fileReader = new FileReader();
         fileReader.readAsDataURL(file);
@@ -47,17 +45,17 @@ export default class Upload extends Component {
     putFile = () => {
         const params = {
             headers: { "Access-Control-Allow-Origin": "*" },
-            body: { file: this.state.file, filename: this.state.filename, meta: this.state.meta }
+            body: { file: this.state.file, filename: this.state.filename }
         };
+        console.log(params.body);
         API.put(api, path, params)
             .then(res => {
                 console.log("file uploaded successfully!", res);
-                this.getFiles();
                 let queue = this.state.queue;
                 queue.shift();
                 this.setState({ queue: queue });
                 if (queue.length) { this.saveFile(this.state.queue[0].file) }
-                else { console.log("all files uploaded successfully!") }
+                else { console.log("all files uploaded successfully!"); this.getFiles(); }
             })
             .catch(err => {
                 console.log("files failed to upload.", err);
@@ -143,7 +141,7 @@ export default class Upload extends Component {
         const handleSubmit = files => {
             this.setState({ queue: files });
             if (!this.state.queue.length) { return; }
-            this.saveFile(this.state.queue[0].file, this.state.queue[0].meta);
+            this.saveFile(this.state.queue[0].file);
             files.forEach(file => file.remove());
         };
         return(
