@@ -64,7 +64,7 @@ export default class Search extends Component {
             {/* <Alert color="warning">
               Please fill out this field.  
             </Alert> */}
-             <form className="col-md-4 mx-auto">
+             <form className="col-md-6 mx-auto">
                 <FormGroup>
                     <Input type="text" className="form-control" id="text" name="text" autoComplete="off" required
                         onChange={this.handleChange} />

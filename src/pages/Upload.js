@@ -47,7 +47,6 @@ export default class Upload extends Component {
             headers: { "Access-Control-Allow-Origin": "*" },
             body: { file: this.state.file, filename: this.state.filename }
         };
-        console.log(params.body);
         API.put(api, path, params)
             .then(res => {
                 console.log("file uploaded successfully!", res);
