@@ -5,12 +5,32 @@ import { API } from 'aws-amplify';
 
 const api = 'filestorageapi';
 const basePath = '/es';
+const downloadPath = '/download';
 
 export default class Search extends Component {
     state = {
         text: '',
         alert: null,
-        results: []
+        results: [],
+        url: ''
+    };
+
+    downloadFile = (fileName) => {
+        const params = { headers: { "Access-Control-Allow-Origin": "*" } };
+        const qsp = "?filename=";
+        const path = downloadPath + qsp + fileName;
+        API.get(api, path, params)
+            .then(res => {
+              const link = document.createElement('a');
+              link.href = res.url;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              console.log("Success!", res.url);
+            })
+            .catch(err => {
+                console.log("Denied!", err);
+            });
     };
 
     query = () => {
@@ -39,6 +59,7 @@ export default class Search extends Component {
                         <th>Key</th>
                         <th>Bucket</th>
                         <th>Location</th>
+                        <th>File</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +70,7 @@ export default class Search extends Component {
                                     <td>{file._source.key}</td>
                                     <td>{file._source.bucket}</td>
                                     <td>{file._source.location}</td>
+                                    <td><Button color="primary" onClick={this.downloadFile(file._source.key)}>Download</Button></td>
                                 </tr>
                             );
                         })
