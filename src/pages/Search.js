@@ -70,7 +70,7 @@ export default class Search extends Component {
                                     <td>{file._source.key}</td>
                                     <td>{file._source.bucket}</td>
                                     <td>{file._source.location}</td>
-                                    <td><Button color="primary" onClick={this.downloadFile(file._source.key)}>Download</Button></td>
+                                    <td><Button color="primary" onClick={()=>{this.downloadFile(file._source.key)}}>Download</Button></td>
                                 </tr>
                             );
                         })
