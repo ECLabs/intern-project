@@ -4,7 +4,7 @@ import { Button, FormGroup, Input, Alert, Table  } from 'reactstrap';
 import { API } from 'aws-amplify';
 
 const api = 'filestorageapi';
-const basePath = '/es';
+const searchPath = '/es';
 const downloadPath = '/download';
 
 export default class Search extends Component {
@@ -37,7 +37,7 @@ export default class Search extends Component {
         if (!this.state.text.length) { return }
         const params = { headers: { "Access-Control-Allow-Origin": "*" } };
         const qsp = "?q=";
-        const path = basePath + qsp + this.state.text;
+        const path = searchPath + qsp + this.state.text;
         API.get(api, path, params)
             .then(res => {
                 console.log("results loaded successfully!", res);
@@ -50,15 +50,28 @@ export default class Search extends Component {
 
     handleChange = change => { this.setState({ text: change.target.value }); }
 
+    formatSize = B => {
+        if (!B) return;
+        switch (true) {
+            case (B >= 1000000) :
+                return (B / 1e+6).toFixed(2) + " MB";
+            case (B > 999) :
+                return (B / 1024).toFixed(2) + " KB";
+            default :
+                return B.toFixed(2) + " B";
+        }
+    };
+
     renderTable = () => {
         const style = { marginTop: 50 }
         return (
-            <Table style={style} >
+            <Table bordered striped style={style} >
                 <thead>
                     <tr>
-                        <th>Key</th>
-                        <th>Bucket</th>
-                        <th>Location</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Size</th>
                         <th>File</th>
                     </tr>
                 </thead>
@@ -68,8 +81,9 @@ export default class Search extends Component {
                             return (
                                 <tr key={ index }>
                                     <td>{file._source.key}</td>
-                                    <td>{file._source.bucket}</td>
-                                    <td>{file._source.location}</td>
+                                    <td>{file._source.date}</td>
+                                    <td>{file._source.type}</td>
+                                    <td>{this.formatSize(file._source.size)}</td>
                                     <td><Button color="primary" onClick={()=>{this.downloadFile(file._source.key)}}>Download</Button></td>
                                 </tr>
                             );
@@ -92,8 +106,8 @@ export default class Search extends Component {
                         onChange={this.handleChange} />
                 </FormGroup>
                 <Button color="primary" onClick={this.query}>Search</Button>
-                {this.renderTable()}
             </form>
+            <div className="col-md-10 mx-auto"> { this.state.results.length > 0 && this.renderTable() } </div>
             </div>
         )
     }

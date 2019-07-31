@@ -27,6 +27,20 @@
                     "/DELETE"
                 ]
             }
+        },
+        {
+            "name": "/rekog",
+            "lambdaFunction": "rekogfunction",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
         }
     ],
     "resourceName": "filestorageapi",
@@ -37,10 +51,13 @@
         },
         {
             "lambdaFunction": "download"
+        },
+        {
+            "lambdaFunction": "rekogfunction"
         }
     ],
     "privacy": {
-        "auth": 2,
+        "auth": 3,
         "unauth": 0,
         "authRoleName": "internproject-internproj-20190627093406-authRole",
         "unAuthRoleName": "internproject-internproj-20190627093406-unauthRole"
@@ -61,7 +78,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "rekogfunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
     ],
-    "uuid": "9e184241"
+    "uuid": "e1c1a0aa"
 }
