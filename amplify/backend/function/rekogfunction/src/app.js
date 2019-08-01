@@ -1,4 +1,18 @@
 /*
+  Amplify Params - DO NOT EDIT
+
+  You can access the following resource attributes as environment variables
+    from your Lambda function.
+
+  var environment = process.env.ENV
+  var region = process.env.REGION
+  var storageInternprojstorageBucketName =
+    process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME
+
+  Amplify Params - DO NOT EDIT
+*/
+
+/*
   Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License").
   You may not use this file except in compliance with the License.
@@ -10,19 +24,6 @@
     limitations under the License.
 */
 
-/*
-  Amplify Params - DO NOT EDIT
-  You can access the following resource attributes as environment variables
-    from your Lambda function.
-  var environment = process.env.ENV
-  var region = process.env.REGION
-  var authInternprojectdb3ae7e4UserPoolId =
-    process.env.AUTH_INTERNPROJECTDB3AE7E4_USERPOOLID
-  var storageInternprojstorageBucketName =
-    process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME
-  Amplify Params - DO NOT EDIT
-*/
-
 var express = require('express')
 var bodyParser = require('body-parser')
 var awsServerlessExpressMiddleware =
@@ -30,7 +31,6 @@ var awsServerlessExpressMiddleware =
 
 // declare a new express app
 var app = express()
-app.use(bodyParser({ limit: '5mb' }));
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
@@ -44,19 +44,18 @@ app.use(function(req, res, next) {
 
 const AWS = require('aws-sdk');
 AWS.config.update({region: process.env.REGION});
-const s3 = new AWS.S3();
+const rekognition = new AWS.Rekognition();
 
 /**********************
  * Example get method *
  **********************/
 
-app.get('/files', function(req, res) {
-  const params = { Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
-  s3.listObjects(params, (err, data) =>
-    { if (err) { throw err } else { res.json({ body: data }); } });
+app.get('/rekog', function(req, res) {
+  // Add your code here
+  res.json({success: 'get call succeed!', url: req.url});
 });
 
-app.get('/files/*', function(req, res) {
+app.get('/rekog/*', function(req, res) {
   // Add your code here
   res.json({success: 'get call succeed!', url: req.url});
 });
@@ -65,12 +64,12 @@ app.get('/files/*', function(req, res) {
 * Example post method *
 ****************************/
 
-app.post('/files', function(req, res) {
+app.post('/rekog', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
 
-app.post('/files/*', function(req, res) {
+app.post('/rekog/*', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
@@ -86,39 +85,36 @@ const es = require('elasticsearch').Client({
   connectionClass: require('http-aws-es')
 });
 
-app.put('/files', function(req, res) {
-  const base64 = req.body.file;
-  const buffer = Buffer.from(base64, 'base64');
+app.put('/rekog', function(req, res) {
+  global.ID = req.body.id;
+  global.META = req.body.meta;
   const params = {
-    Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME,
-    Key: req.body.key,
-    Metadata: req.body.meta,
-    Body: buffer
+    Image: {
+      S3Object: {
+        Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME,
+        Name: req.body.name
+      }
+    },
+    MaxLabels: 10,
+    MinConfidence: 75
   };
-  s3.upload(params, (err, data) => {
-    if (err) { throw err }
+  rekognition.detectLabels(params, (err, data) => {
+    if (err) { throw err; }
     else {
-      const params = {
-        Bucket: data.Bucket,
-        Key: data.Key
-      };
-      s3.headObject(params, (err, data) => {
+      global.META.labels = data.Labels;
+      es.index({
+        index: 'files',
+        id: global.ID,
+        body: global.META
+      }, (err, data) => {
         if (err) { throw err; }
-        else {
-          es.index({
-            index: 'files',
-            body: data.Metadata
-          }, (err, data) => {
-            if (err) { throw err; }
-            else { res.json({ body: data }) }
-          });
-        }
+        else { res.json({ body: data }) }
       });
     }
   });
 });
 
-app.put('/files/*', function(req, res) {
+app.put('/rekog/*', function(req, res) {
   // Add your code here
   res.json({success: 'put call succeed!', url: req.url, body: req.body})
 });
@@ -127,12 +123,12 @@ app.put('/files/*', function(req, res) {
 * Example delete method *
 ****************************/
 
-app.delete('/files', function(req, res) {
+app.delete('/rekog', function(req, res) {
   // Add your code here
   res.json({success: 'delete call succeed!', url: req.url});
 });
 
-app.delete('/files/*', function(req, res) {
+app.delete('/rekog/*', function(req, res) {
   // Add your code here
   res.json({success: 'delete call succeed!', url: req.url});
 });

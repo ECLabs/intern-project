@@ -16,8 +16,6 @@
     from your Lambda function.
   var environment = process.env.ENV
   var region = process.env.REGION
-  var authInternprojectdb3ae7e4UserPoolId =
-    process.env.AUTH_INTERNPROJECTDB3AE7E4_USERPOOLID
   var storageInternprojstorageBucketName =
     process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME
   Amplify Params - DO NOT EDIT
@@ -30,7 +28,6 @@ var awsServerlessExpressMiddleware =
 
 // declare a new express app
 var app = express()
-app.use(bodyParser({ limit: '5mb' }));
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
@@ -42,21 +39,28 @@ app.use(function(req, res, next) {
   next()
 });
 
-const AWS = require('aws-sdk');
-AWS.config.update({region: process.env.REGION});
-const s3 = new AWS.S3();
+const domain = 'search-internproject-kodwdicd7hu3ibx2v46kerni2m.us-east-1';
+const host = 'https://' + domain + '.es.amazonaws.com';
+const es = require('elasticsearch').Client({
+  hosts: [ host ],
+  connectionClass: require('http-aws-es')
+});
 
 /**********************
  * Example get method *
  **********************/
 
-app.get('/files', function(req, res) {
-  const params = { Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME };
-  s3.listObjects(params, (err, data) =>
-    { if (err) { throw err } else { res.json({ body: data }); } });
+app.get('/es', function(req, res) {
+  es.search({
+    index: 'files',
+    q: req.query['q']
+  }, (err, data) => {
+    if (err) { throw err; }
+    else { res.json({ body: data }) }
+  });
 });
 
-app.get('/files/*', function(req, res) {
+app.get('/es/*', function(req, res) {
   // Add your code here
   res.json({success: 'get call succeed!', url: req.url});
 });
@@ -65,12 +69,12 @@ app.get('/files/*', function(req, res) {
 * Example post method *
 ****************************/
 
-app.post('/files', function(req, res) {
+app.post('/es', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
 
-app.post('/files/*', function(req, res) {
+app.post('/es/*', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
@@ -79,46 +83,12 @@ app.post('/files/*', function(req, res) {
 * Example put method *
 ****************************/
 
-const domain = 'search-internproject-kodwdicd7hu3ibx2v46kerni2m.us-east-1';
-const host = 'https://' + domain + '.es.amazonaws.com';
-const es = require('elasticsearch').Client({
-  hosts: [ host ],
-  connectionClass: require('http-aws-es')
+app.put('/es', function(req, res) {
+  // Add your code here
+  res.json({success: 'put call succeed!', url: req.url, body: req.body})
 });
 
-app.put('/files', function(req, res) {
-  const base64 = req.body.file;
-  const buffer = Buffer.from(base64, 'base64');
-  const params = {
-    Bucket: process.env.STORAGE_INTERNPROJSTORAGE_BUCKETNAME,
-    Key: req.body.key,
-    Metadata: req.body.meta,
-    Body: buffer
-  };
-  s3.upload(params, (err, data) => {
-    if (err) { throw err }
-    else {
-      const params = {
-        Bucket: data.Bucket,
-        Key: data.Key
-      };
-      s3.headObject(params, (err, data) => {
-        if (err) { throw err; }
-        else {
-          es.index({
-            index: 'files',
-            body: data.Metadata
-          }, (err, data) => {
-            if (err) { throw err; }
-            else { res.json({ body: data }) }
-          });
-        }
-      });
-    }
-  });
-});
-
-app.put('/files/*', function(req, res) {
+app.put('/es/*', function(req, res) {
   // Add your code here
   res.json({success: 'put call succeed!', url: req.url, body: req.body})
 });
@@ -127,12 +97,12 @@ app.put('/files/*', function(req, res) {
 * Example delete method *
 ****************************/
 
-app.delete('/files', function(req, res) {
+app.delete('/es', function(req, res) {
   // Add your code here
   res.json({success: 'delete call succeed!', url: req.url});
 });
 
-app.delete('/files/*', function(req, res) {
+app.delete('/es/*', function(req, res) {
   // Add your code here
   res.json({success: 'delete call succeed!', url: req.url});
 });
