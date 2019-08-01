@@ -41,6 +41,20 @@
                     "/DELETE"
                 ]
             }
+        },
+        {
+            "name": "/es",
+            "lambdaFunction": "elasticsearchfunction",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
         }
     ],
     "resourceName": "filestorageapi",
@@ -54,10 +68,13 @@
         },
         {
             "lambdaFunction": "rekogfunction"
+        },
+        {
+            "lambdaFunction": "elasticsearchfunction"
         }
     ],
     "privacy": {
-        "auth": 3,
+        "auth": 4,
         "unauth": 0,
         "authRoleName": "internproject-internproj-20190627093406-authRole",
         "unAuthRoleName": "internproject-internproj-20190627093406-unauthRole"
@@ -86,7 +103,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "elasticsearchfunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
     ],
-    "uuid": "e1c1a0aa"
+    "uuid": "b1062046"
 }

@@ -102,7 +102,7 @@ export default class Upload extends Component {
                 let queue = this.state.queue;
                 queue.shift();
                 this.setState({ queue: queue });
-                if (queue.length) { this.saveFile(this.state.queue[0].file) }
+                if (this.state.queue.length) { this.saveFile(this.state.queue[0].meta, this.state.queue[0].file) }
                 else { console.log("all files uploaded successfully!"); this.getFiles(); }
             })
             .catch(err => {

@@ -32,12 +32,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"rekogfunction",
+						"elasticsearchfunction",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"rekogfunction",
+									"elasticsearchfunction",
 									"-",
 									{
 										"Ref": "env"
@@ -49,14 +49,14 @@
 				},
 				"Environment": {
 					"Variables": {
-						"STORAGE_INTERNPROJSTORAGE_BUCKETNAME": {
-							"Ref": "storageinternprojstorageBucketName"
-						},
 						"ENV": {
 							"Ref": "env"
 						},
 						"REGION": {
 							"Ref": "AWS::Region"
+						},
+						"STORAGE_INTERNPROJSTORAGE_BUCKETNAME": {
+							"Ref": "storageinternprojstorageBucketName"
 						}
 					}
 				},
@@ -70,7 +70,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "internproject-internproj-20190627093406-deployment",
-					"S3Key": "amplify-builds/rekogfunction-53646e3872744f5a7536-build.zip"
+					"S3Key": "amplify-builds/elasticsearchfunction-78747161646b666f7856-build.zip"
 				}
 			}
 		},
@@ -80,12 +80,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"internprojectLambdaRole1c45886c",
+						"internprojectLambdaRole34395012",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"internprojectLambdaRole1c45886c",
+									"internprojectLambdaRole34395012",
 									"-",
 									{
 										"Ref": "env"
@@ -174,9 +174,10 @@
 						{
 							"Effect": "Allow",
 							"Action": [
+								"s3:PutObject",
 								"s3:GetObject",
 								"s3:ListBucket",
-								"s3:PutObject"
+								"s3:DeleteObject"
 							],
 							"Resource": [
 								{
