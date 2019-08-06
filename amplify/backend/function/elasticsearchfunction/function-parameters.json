@@ -1,0 +1,12 @@
+{
+    "permissions": {
+        "storage": {
+            "internprojstorage": [
+                "create",
+                "read",
+                "update",
+                "delete"
+            ]
+        }
+    }
+}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Button, FormGroup, Input, Alert, Table  } from 'reactstrap';
+import { Button, FormGroup, Input, Alert, Table, Spinner } from 'reactstrap';
 
 import { API } from 'aws-amplify';
 
 const api = 'filestorageapi';
-const basePath = '/es';
+const searchPath = '/es';
 const downloadPath = '/download';
 
 export default class Search extends Component {
@@ -12,7 +12,8 @@ export default class Search extends Component {
         text: '',
         alert: null,
         results: [],
-        url: ''
+        url: '',
+        spin: false
     };
 
     downloadFile = (fileName) => {
@@ -34,31 +35,83 @@ export default class Search extends Component {
     };
 
     query = () => {
-        if (!this.state.text.length) { return }
+        this.setState({ spin: true });
         const params = { headers: { "Access-Control-Allow-Origin": "*" } };
         const qsp = "?q=";
-        const path = basePath + qsp + this.state.text;
+        const path = searchPath + qsp + this.state.text;
         API.get(api, path, params)
             .then(res => {
                 console.log("results loaded successfully!", res);
-                this.setState({ results: res.hits.hits });
+                this.setState({ results: res.body.hits.hits, spin: false });
             })
             .catch(err => {
-                console.log("results failed to load.", err);
+                console.log("results failed to load.", err); this.setState({ spin: false });
             });
     };
 
     handleChange = change => { this.setState({ text: change.target.value }); }
 
-    renderTable = () => {
-        const style = { marginTop: 50 }
+    formatSize = B => {
+        switch (true) {
+            case (B >= 1000000) :
+                return (B / 1e+6).toFixed(2) + " MB";
+            case (B > 999) :
+                return (B / 1024).toFixed(2) + " KB";
+            default :
+                return B.toFixed(2) + " B";
+        }
+    };
+
+    listLabels = labels => {
+        if (!labels) {return (<div><br /><i>N/A</i></div>);}
         return (
-            <Table style={style} >
+            <ul className="list-unstyled">
+                {
+                    labels.map((label, index) => {
+                        return (
+                            <li key={index}>
+                                <div className="row">
+                                    <div className="col"><i>{label.Name}</i></div>
+                                    <div className="col">{label.Confidence.toFixed(2)}%</div>
+                                </div>
+                            </li>
+                        );
+                    })
+                }
+            </ul>
+        );
+    };
+
+    listMeta = file => {
+        return (
+            <ul className="list-unstyled">
+                <li>
+                    <div className="row">
+                        <div className="col"><i>Date</i></div>
+                        <div className="col">{file._source.date}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col"><i>Size</i></div>
+                        <div className="col">{this.formatSize(file._source.size)}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col"><i>Type</i></div>
+                        <div className="col">{file._source.type}</div>
+                    </div>
+                </li>
+            </ul>
+        );
+    };
+
+    renderTable = () => {
+        const styles = { marginTop: 50 }
+        return (
+            <Table bordered striped style={styles} >
                 <thead>
                     <tr>
                         <th>Key</th>
-                        <th>Bucket</th>
-                        <th>Location</th>
+                        <th>Meta</th>
+                        <th>Rekognition</th>
                         <th>File</th>
                     </tr>
                 </thead>
@@ -68,8 +121,8 @@ export default class Search extends Component {
                             return (
                                 <tr key={ index }>
                                     <td>{file._source.key}</td>
-                                    <td>{file._source.bucket}</td>
-                                    <td>{file._source.location}</td>
+                                    <td>{this.listMeta(file)}</td>
+                                    <td>{this.listLabels(file._source.labels)}</td>
                                     <td><Button color="primary" onClick={()=>{this.downloadFile(file._source.key)}}>Download</Button></td>
                                 </tr>
                             );
@@ -86,14 +139,17 @@ export default class Search extends Component {
             {/* <Alert color="warning">
               Please fill out this field.
             </Alert> */}
-             <form className="col-md-6 mx-auto">
+            <form className="col-md-6 mx-auto">
                 <FormGroup>
                     <Input type="text" className="form-control" id="text" name="text" autoComplete="off" required
                         onChange={this.handleChange} />
                 </FormGroup>
-                <Button color="primary" onClick={this.query}>Search</Button>
-                {this.renderTable()}
+                <Button color="primary" onClick={this.query} disabled={!this.state.text.length}>Search</Button>
             </form>
+            <div className="col-md-8 mx-auto">
+                { this.state.spin && <div><br /><Spinner color="primary" /></div> }
+                { this.state.results.length > 0 && this.renderTable() }
+            </div>
             </div>
         )
     }

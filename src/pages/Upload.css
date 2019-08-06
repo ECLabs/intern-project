@@ -1,6 +1,11 @@
 .table {
     height: 300px;
     overflow-y: scroll;
+    text-align: center;
+}
+
+.table-bordered th, .table-bordered td {
+    max-width: 10px;
 }
 
 .input-content {

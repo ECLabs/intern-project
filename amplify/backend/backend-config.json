@@ -53,6 +53,34 @@
                     ]
                 }
             ]
+        },
+        "rekogfunction": {
+            "service": "Lambda",
+            "providerPlugin": "awscloudformation",
+            "build": true,
+            "dependsOn": [
+                {
+                    "category": "storage",
+                    "resourceName": "internprojstorage",
+                    "attributes": [
+                        "BucketName"
+                    ]
+                }
+            ]
+        },
+        "elasticsearchfunction": {
+            "service": "Lambda",
+            "providerPlugin": "awscloudformation",
+            "build": true,
+            "dependsOn": [
+                {
+                    "category": "storage",
+                    "resourceName": "internprojstorage",
+                    "attributes": [
+                        "BucketName"
+                    ]
+                }
+            ]
         }
     },
     "api": {
@@ -71,6 +99,22 @@
                 {
                     "category": "function",
                     "resourceName": "download",
+                    "attributes": [
+                        "Name",
+                        "Arn"
+                    ]
+                },
+                {
+                    "category": "function",
+                    "resourceName": "rekogfunction",
+                    "attributes": [
+                        "Name",
+                        "Arn"
+                    ]
+                },
+                {
+                    "category": "function",
+                    "resourceName": "elasticsearchfunction",
                     "attributes": [
                         "Name",
                         "Arn"
