@@ -35,24 +35,25 @@ export default class Home extends Component {
       <Card>
         <CardHeader><h2>Upload</h2><h6>Jason Brito</h6></CardHeader>
         <CardBody>
-        <b>How It Works:</b>
-        <br/>
-        The upload process for this serverless application implements Amazon API Gateway, AWS Lambda, Amazon
-        Elasticsearch Service, and Amazon S3. Amazon API Gateway routes requests to other services in the application;
-        AWS Lambda uploads files to Amazon S3 and metadata to Amazon Elasticsearch Service; finally, Amazon S3 stores
-        files for further processing. Using Amazon API Gateway and AWS Lambda, we separate and secure different
-        services that use our data.
-        <br/><br/>
-        <b>What I Learned:</b>
-        <br/>
-        I learned how to process data from the front end through the back end with various AWS services. The benefit of
-        introducing different services to interact with my data instead of directly accessing it was the layers of
-        protection offered by these services. Specifically, by managing permissions for each of these services, I
-        learned how to compartmentalize access which further secured my data. While the most difficult aspect of this
-        project was debugging cryptic errors from the AWS Console, I have become more comfortable and competent
-        resolving such errors by writing effective tests for Lambda functions and tracing the application execution.
-        I am now much more capable of determining which AWS services would best suit my application and integrating
-        them into my application.
+            <b>How It Works:</b>
+            <br/>
+            The upload process for this serverless application implements Amazon API Gateway, AWS Lambda, Amazon S3,
+            Amazon Elasticsearch Service, and Amazon Rekognition. Amazon API Gateway routes requests to the other
+            services in the application; AWS Lambda uploads files to Amazon S3 and metadata to Amazon Elasticsearch
+            Service; finally, if a file is an image, Amazon Rekognition analyzes it and updates the metadata in Amazon
+            Elasticsearch Service with the detected labels.
+            <br/><br/>
+            <b>What I Learned:</b>
+            <br/>
+            I learned how to process data from the front end to the back end with various AWS services. The benefit of
+            introducing different services to interact with the data instead of directly accessing it was the layers of
+            protection offered by these services. Specifically, by setting permissions for each of these services, I
+            learned how to compartmentalize access which further secured the data. Breaking the upload pipeline into
+            multiple components managed by different services also distributed the risk of errors, which simplified the
+            debugging process. While the most difficult aspect of this component was decoding cryptic errors from the
+            AWS Console, I have become much more capable of resolving such errors across different services, with
+            effective testing for AWS Lambda functions and log reporting, and integrating them cohesively to create a
+            fully functioning application.
         </CardBody>
       </Card>
     );
@@ -63,8 +64,25 @@ export default class Home extends Component {
       <Card>
         <CardHeader><h2>Search Functionality</h2><h6>Jason Brito & Jeffrey Mercedes</h6></CardHeader>
         <CardBody>
-            Amazon Elasticsearch Service securely ingests data from S3 and searches, analyzes,
-            and visualizes it in real time.
+            <b>How It Works:</b>
+            <br/>
+            The search process for this serverless application implements Amazon API Gateway, AWS Lambda, Amazon S3, and
+            Amazon Elasticsearch Service. Amazon API Gateway routes requests to AWS Lambda and AWS Lambda manages
+            metadata retrieval from Amazon Elasticsearch Service and file download from Amazon S3. Amazon Elasticsearch
+            Service independently identifies significant data fields, such as file type or detected labels, and
+            configures them to be searchable.
+            <br/><br/>
+            <b>What I Learned:</b>
+            <br/>
+            I learned how to index, update, and get data from an Amazon Elasticsearch Service cluster. The benefit of
+            using an Amazon Elasticsearch Service cluster to manage the data stored in Amazon S3 was the flexibility
+            with which the data could be modified. While the most difficult aspect of this component was properly
+            forming requests to Amazon Elasticsearch Service, I solved this using NPM packages to take care of
+            issues such as signed HTTP requests. I also briefly experimented with Python as I initially implemented the
+            AWS Lambda function that called Amazon Elasticsearch Service in Python. However, because the AWS Amplify API
+            only generated functions as serverless express applications in Node.js, I changed the implementation to a
+            Node.js AWS Lambda function with an Amazon API Gateway API route in order to integrate more easily with the
+            rest of the application.
         </CardBody>
       </Card>
     );
@@ -86,9 +104,9 @@ export default class Home extends Component {
     return (
       <div className="jumbotron">
         <h1>Intern Serverless Application Project</h1>
-        <p className="lead">We, the interns, have put together a servless
+        <p className="lead">We, the interns, have put together a serverless
           application by using a number of resources/services offered by AWS. Those
-          resources/services include AWS Amplify, Cognito, S3, API Gateway, Lambda, and Elasticsearch.
+          resources/services include AWS Amplify, Cognito, S3, API Gateway, Lambda, Elasticsearch, and Rekognition.
         </p>
         <hr className="my-4"/>
         <div>

@@ -53,7 +53,8 @@ const es = require('elasticsearch').Client({
 app.get('/es', function(req, res) {
   es.search({
     index: 'files',
-    q: req.query['q']
+    q: req.query['q'],
+    size: 50
   }, (err, data) => {
     if (err) { throw err; }
     else { res.json({ body: data }) }

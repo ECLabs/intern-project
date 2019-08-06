@@ -1,7 +1,7 @@
 // import React
 import React, { Component } from 'react';
 // import reactstrap
-import { Input, Card, CardHeader, CardFooter, CardBody, CardDeck, Table } from 'reactstrap';
+import { Input, Card, CardHeader, CardFooter, CardBody, CardDeck, Table, Spinner, UncontrolledAlert } from 'reactstrap';
 // import Amplify
 import { Storage, API } from 'aws-amplify';
 // import CSS stylesheet
@@ -32,7 +32,9 @@ export default class Upload extends Component {
             key: '', // name of file to be uploaded to S3 bucket
             meta: '', // metadata of file to be uploaded to S3 bucket
             files: [], // files in S3 bucket
-            queue: [] // multiple files to be uploaded to S3 bucket
+            queue: [], // multiple files to be uploaded to S3 bucket
+            spin: false, // flag to start/stop spinner
+            success: false // flag to signal successful upload
         };
     }
 
@@ -43,13 +45,14 @@ export default class Upload extends Component {
 
     // call api to GET files then sort files
     getFiles = () => {
+        this.setState({ spin: true });
         const params = { headers: { "Access-Control-Allow-Origin": "*" } };
         API.get(api, filePath, params)
             .then(res => {
                 console.log("files loaded successfully!", res);
-                this.setState({ files: this.sortFiles(res.body.Contents) });
+                this.setState({ files: this.sortFiles(res.body.Contents), spin: false });
             })
-            .catch(err => { console.log("files failed to load.", err); });
+            .catch(err => { console.log("files failed to load.", err); this.setState({ spin: false }); });
     };
 
     // sort files chronologically
@@ -91,6 +94,7 @@ export default class Upload extends Component {
 
     // call api to PUT file then reload files
     putFile = () => {
+        this.setState({ success: false });
         const params = {
             headers: { "Access-Control-Allow-Origin": "*" },
             body: { file: this.state.file, key: this.state.key, meta: this.state.meta }
@@ -103,7 +107,11 @@ export default class Upload extends Component {
                 queue.shift();
                 this.setState({ queue: queue });
                 if (this.state.queue.length) { this.saveFile(this.state.queue[0].meta, this.state.queue[0].file) }
-                else { console.log("all files uploaded successfully!"); this.getFiles(); }
+                else {
+                    console.log("file(s) uploaded successfully!");
+                    this.setState({ success: true });
+                    this.getFiles();
+                }
             })
             .catch(err => {
                 console.log("files failed to upload.", err);
@@ -128,6 +136,12 @@ export default class Upload extends Component {
             <div className="jumbotron">
                 <h1>Upload</h1>
                 <p className="lead">manage files in an S3 bucket</p>
+                {
+                    this.state.success &&
+                        <UncontrolledAlert color="success" className="lead">
+                            file(s) uploaded successfully!
+                        </UncontrolledAlert>
+                }
                 <hr className="my-4"/>
                 <CardDeck>
                     { this.renderUploadCard() }
@@ -144,6 +158,7 @@ export default class Upload extends Component {
                 <CardHeader className="lead">Upload</CardHeader>
                 <CardBody>{ this.renderDropzone() }</CardBody>
                 <CardFooter>
+
                     <div className="alert alert-secondary lead">drag & drop file(s) above or click to upload</div>
                 </CardFooter>
             </Card>
@@ -182,9 +197,15 @@ export default class Upload extends Component {
         return(
             <Card>
                 <CardHeader className="lead">View</CardHeader>
-                <CardBody>{ this.renderTable() }</CardBody>
+                <CardBody>{ this.state.files.length > 0 && this.renderTable() }</CardBody>
                 <CardFooter>
-                    <div className="alert alert-secondary lead">{this.state.files.length} file(s)</div>
+                    {
+                        this.state.spin && <div className="alert alert-secondary lead"><Spinner color="primary" /></div>
+                    }
+                    {
+                        !this.state.spin &&
+                            <div className="alert alert-secondary lead">{this.state.files.length} file(s)</div>
+                    }
                 </CardFooter>
             </Card>
         );
@@ -197,7 +218,7 @@ export default class Upload extends Component {
                 <Table bordered striped>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Key</th>
                             <th>Date</th>
                             <th>Size</th>
                         </tr>
