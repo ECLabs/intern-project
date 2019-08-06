@@ -74,9 +74,16 @@ export default class Home extends Component {
     return(
       <Card>
         <CardHeader><h2>Navbar & Search Page</h2> <h6>Steven Lee</h6></CardHeader>
-        <CardBody>Steven created the navigation bar and the UI for the search page.
-          The navigation bar allows the user to navigate to any page.
-          This project was his first introduction to React and Reactstrap.
+        <CardBody>
+        <b>How It Works:</b>
+        <br/>
+        The navigation bar allows the user to navigate to any page. I also added a sign out button to the navigation bar.
+        The search page functionality will be developed by Jeff and Jason.
+        <br/><br/>
+        <b>What I Learned:</b>
+        <br/>
+        This project was my first introduction to React, Reactstrap, and Bootstrap. This was also my first time collaborating with 
+        other developers using Github. 
         </CardBody>
       </Card>
     );
