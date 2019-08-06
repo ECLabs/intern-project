@@ -70,7 +70,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "internproject-internproj-20190627093406-deployment",
-					"S3Key": "amplify-builds/elasticsearchfunction-78747161646b666f7856-build.zip"
+					"S3Key": "amplify-builds/elasticsearchfunction-1565102279-latest-build.zip"
 				}
 			}
 		},
